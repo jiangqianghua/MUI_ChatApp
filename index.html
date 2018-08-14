@@ -6,14 +6,90 @@
     <title></title>
     <script src="js/mui.min.js"></script>
     <link href="css/mui.min.css" rel="stylesheet"/>
+    <link rel="stylesheet" href="css/header.css" />
+   <link rel="stylesheet" type="text/css" href="fonticon/iconfont.css">
     <script type="text/javascript" charset="utf-8">
       	mui.init();
+      	mui.plusReady(function(){
+      		// 设置状态栏颜色
+      		plus.navigator.setStatusBarStyle("light")
+      		plus.navigator.setStatusBarBackground("#c9394A")
+      	})
     </script>
 </head>
 <body>
 	<!-- mh -->
-	<header class="mui-bar mui-bar-nav">
-		<h1 class="mui-title">标题</h1>
+	<header class="mui-bar mui-bar-nav title">
+		<h1 class="mui-title title-color"><b>微聊</b></h1>
 	</header>
+	<nav class="mui-bar mui-bar-tab">
+		<a class="mui-tab-item mui-active" tabindex="0">
+			<span class="mui-icon iconfont icon-icon"></span>
+			<span class="mui-tab-label">微信</span>
+		</a>
+		<a class="mui-tab-item"  tabindex="1">
+			<span class="mui-icon iconfont icon-tongxunlu"></span>
+			<span class="mui-tab-label">通信录</span>
+		</a>
+		<a class="mui-tab-item"  tabindex="2">
+			<span class="mui-icon iconfont icon-find"></span>
+			<span class="mui-tab-label">发现</span>
+		</a>
+		<a class="mui-tab-item"  tabindex="3">
+			<span class="mui-icon iconfont icon-wo"></span>
+			<span class="mui-tab-label">我</span>
+		</a>
+	</nav>
+	
+	<script type="application/javascript">
+		var muxinArray = [
+			{
+				pageId:"chatlist.html",
+				pageUrl:"chatlist.html",
+			},
+			{
+				pageId:"content.html",
+				pageUrl:"content.html",
+			},
+			{
+				pageId:"find.html",
+				pageUrl:"find.html",
+			},
+			{
+				pageId:"mine.html",
+				pageUrl:"mine.html",
+			}
+		];
+		var muxinStyle = {
+			top:"44px",
+			bottom:"50px"
+		};
+		mui.plusReady(function(){
+			var indexWebView = plus.webview.currentWebview();
+			// 循环创建wedview
+			for(var i = 0 ; i < muxinArray.length ; i++){
+				var muxinPage = plus.webview.create(muxinArray[i].pageUrl
+					,muxinArray[i].pageId
+					,muxinStyle);
+				muxinPage.hide();
+				// 把创建的webview追加到住的web中
+				indexWebView.append(muxinPage);
+			}
+			plus.webview.show(muxinArray[0].pageId);
+			
+			// 批量绑定tab事件，展示不同的页面
+			mui(".mui-bar-tab").on("tap","a",function(){
+				var tabindex = this.getAttribute("tabindex");
+				//  显示对应的页面
+				plus.webview.show(muxinArray[tabindex].pageId,"fade-in",200);
+				for(var i = 0 ; i < muxinArray.length;i++){
+					if(i != tabindex){
+						// 隐藏其他页面
+						plus.webview.hide(muxinArray[i],"fade-out",200);
+					}
+				}
+			});
+		});
+	</script>
 </body>
 </html>
